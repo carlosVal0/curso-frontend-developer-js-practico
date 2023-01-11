@@ -3,11 +3,14 @@ const desktopMenu = document.querySelector(".desktop-menu");
 const burgerMenuIcon = document.querySelector(".menu");
 const menuCartIcon = document.querySelector(".navbar-shopping-cart");
 const mobileMenu = document.querySelector(".mobile-menu");
+const productDetailCloseIcon = document.querySelector('.product-detail-close')
 const shoppingCartContainer = document.querySelector('#shopping-cart-container')
+const productDetailContainer = document.getElementById('product-detail')
 
 menuEmail.addEventListener('click', toggleDesktopMenu);
 burgerMenuIcon.addEventListener('click',toggleMobileMenu);
 menuCartIcon.addEventListener('click',toggleCartAside);
+productDetailCloseIcon.addEventListener('click',closeProductDetailAside)
 
 function toggleDesktopMenu(){
 
@@ -28,6 +31,8 @@ function toggleMobileMenu(){
         shoppingCartContainer.classList.add('inactive')    
     }
 
+    closeProductDetailAside()
+
     mobileMenu.classList.toggle('inactive')
 }
 
@@ -39,30 +44,50 @@ function toggleCartAside(){{
         mobileMenu.classList.add('inactive')
     }
 
+    const isProductDetailClosed = productDetailContainer.classList.contains('inactive')
+    
+    if(!isProductDetailClosed){
+        productDetailContainer.classList.add('inactive')
+    }
+
     shoppingCartContainer.classList.toggle('inactive')
     
 }}
 
 
+function openProductDetailAside() {
+
+    shoppingCartContainer.classList.add('inactive')
+
+    productDetailContainer.classList.remove('inactive')
+}
+
+function closeProductDetailAside(){
+    productDetailContainer.classList.add('inactive')
+}
+
 function loadProducts(){
     const container = document.querySelector('.cards-container')
     productList.forEach((item) => {
-        let product = `
-        <div class="product-card">
-        <img src="${item.image}" alt="">
-        <div class="product-info">
-          <div>
-            <p>$${item.price}</p>
-            <p>$${item.name}</p>
-          </div>
-          <figure>
-            <img src="./icons/bt_add_to_cart.svg" alt="">
-          </figure>
-        </div>
-      </div> 
+
+        let productContainer = document.createElement('div')
+        productContainer.classList.add('product-card')
+        productContainer.innerHTML = `
+            <img src="${item.image}" alt="">
+            <div class="product-info">
+            <div>
+                <p>$${item.price}</p>
+                <p>$${item.name}</p>
+            </div>
+            <figure>
+                <img src="./icons/bt_add_to_cart.svg" alt="">
+            </figure>
+            </div>
         `
-        console.log("Append")
-        container.innerHTML += product
+        
+        const productImg = productContainer.firstElementChild
+        productImg.addEventListener('click', openProductDetailAside)
+        container.appendChild(productContainer)
     })
 }
 
